@@ -148,18 +148,16 @@
     function generateRandomTreasures(num, userLat, userLng) {
         const newTreasures = []
         for (let i = 0; i < num; i++) {
-            // Generate random treasure points in the neighborhood based on the user's current location
-            const lng = userLng + (Math.random() - 0.3) * 0.01
-            const lat = userLat + (Math.random() - 0.3) * 0.01
+            // 控制生成点的经纬度偏移，使宝藏点靠近用户
+            const lng = userLng + (Math.random() - 0.5) * 0.002 // 控制偏移范围更小
+            const lat = userLat + (Math.random() - 0.5) * 0.002 // 控制偏移范围更小
 
-            // Checking the validity of latitude and longitude
-            if (Number.isNaN(lng) || Number.isNaN(lat)) {
-                console.error(`Invalid treasure coordinates: ${lng}, ${lat}`)
-                newTreasures.push({ lngLat: { lng, lat }, found: false, name: `Treasure ${i + 1}` })
-            }
+            // 将生成的宝藏点存储起来
+            newTreasures.push({ lngLat: { lng, lat }, found: false, name: `Treasure ${i + 1}` })
         }
         return newTreasures
     }
+
     function haversine(lat1, lon1, lat2, lon2) {
         const R = 6371 // Radius of the Earth in kilometers
         const dLat = (lat2 - lat1) * Math.PI / 180
@@ -174,6 +172,7 @@
             console.error('Invalid user position, cannot check for treasure.')
             return
         }
+
         treasures.forEach((treasure) => {
             const distance = haversine(
                 position.coords.latitude,
@@ -181,12 +180,15 @@
                 treasure.lngLat.lat,
                 treasure.lngLat.lng,
             )
-            if (distance < 0.05 && !treasure.found) { // In 50 meters
+
+            // 距离小于 50 米，标记宝藏为已找到
+            if (distance < 0.05 && !treasure.found) { // 0.05 千米即 50 米
                 treasure.found = true
-                proximityMessage(`Congratulations ${treasure.name} 🎉`)
+                console.log(`Treasure found: ${treasure.name}`)
             }
         })
     }
+
     /**
      * Variables can be initialised without a value and populated later
      * WARNING: this can lead to errors if the variable is used before being
@@ -211,9 +213,9 @@
      * 'https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/melbourne.geojson'
      */
     onMount(async () => {
-        console.log('onMount is running!') // Check if onMount is executed
-        treasures = generateRandomTreasures(5) // Generate 5 random treasure spots
-        console.log('Generated treasures:', treasures) // Print Generated Treasure Points
+        console.log('onMount is running!') // 检查 onMount 是否执行
+        treasures = generateRandomTreasures(5) // 生成 5 个随机宝藏点
+        console.log('Generated treasures:', treasures) // 打印生成的宝藏点
         const response = await fetch('melbourne.geojson')
         geojsonData = await response.json()
     })
