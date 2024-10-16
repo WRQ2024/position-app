@@ -149,8 +149,8 @@
     function generateRandomTreasures(num) {
         const newTreasures = []
         for (let i = 0; i < num; i++) {
-            const lng = 144.95 + Math.random() * 0.02 // 随机生成经度
-            const lat = -37.81 + Math.random() * 0.01 // 随机生成纬度
+            const lng = 144.95 + Math.random() * 0.04 // 随机生成经度
+            const lat = -37.81 + Math.random() * 0.03 // 随机生成纬度
             newTreasures.push({ lngLat: { lng, lat }, found: false, name: `Treasure ${i + 1}` })
         }
         return newTreasures
@@ -171,9 +171,7 @@
             return
         }
 
-        let updated = false // 检查是否有宝藏被找到
-
-        treasures = treasures.map((treasure) => {
+        treasures.forEach((treasure) => {
             const distance = haversine(
                 position.coords.latitude,
                 position.coords.longitude,
@@ -181,19 +179,12 @@
                 treasure.lngLat.lng,
             )
 
-            // 如果距离小于 50 米，标记宝藏为已找到
-            if (distance < 0.05 && !treasure.found) { // 50 米
+            // 距离小于 50 米，标记宝藏为已找到
+            if (distance < 0.05 && !treasure.found) { // 0.05 千米即 50 米
                 treasure.found = true
-                updated = true
                 console.log(`Treasure found: ${treasure.name}`)
             }
-
-            return treasure
         })
-
-        if (updated) {
-            console.log('Treasures updated:', treasures)
-        }
     }
 
     /**
@@ -315,12 +306,11 @@
                 watch={true}
                 on:position={(e) => {
                     watchedPosition = e.detail
-                    position = watchedPosition // 确保更新位置
                     const newCoords = [watchedPosition.coords.longitude, watchedPosition.coords.latitude]
                     console.log('Watching position:', newCoords)
-                    // 添加新坐标到路径
+                    // Add new coordinates to the path
                     path = [...path, newCoords]
-                    // 检查用户是否接近宝藏点
+                    // Check if the user is close to the treasure
                     checkForTreasure()
                 }}
             />
