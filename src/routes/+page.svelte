@@ -92,6 +92,8 @@
     let totalDistance = 0 // To store the total distance walked
     let allTreasuresFound = false // Record whether all treasures have been found.
     let countFound = 0 // Count of treasures found
+    let startTime = null // Record the start time when the first location is fetched
+    let elapsedTime = 0 // Store the time it took to find all treasures
     let error = ''
     let position = {}
     let coords = []
@@ -196,6 +198,7 @@
 
         if (countFound === treasures.length) {
             allTreasuresFound = true // Set the flag when all treasures are found
+            elapsedTime = Math.floor((Date.now() - startTime) / 1000) // Calculate elapsed time in seconds
         }
     }
 
@@ -234,7 +237,8 @@
     {#if allTreasuresFound}
         <div class="absolute top-0 left-0 right-0 bg-green-500 text-white p-4 text-center">
             🎉 Congratulations, you've found all the treasures! 🎉<br>
-            You walked a total of {totalDistance.toFixed(2)} meters.
+            You walked a total of {totalDistance.toFixed(2)} meters.<br>
+            Time taken: {Math.floor(elapsedTime / 60)} minutes {elapsedTime % 60} seconds.
         </div>
     {/if}
     <!-- grid, grid-cols-#, col-span-#, md:xxxx are some Tailwind utilities you can use for responsive design -->
@@ -267,6 +271,9 @@
                 on:position={(e) => {
                     const userPosition = e.detail // Get current user location
                     coords = [userPosition.coords.longitude, userPosition.coords.latitude]
+                    if (!startTime) {
+                        startTime = Date.now() // Store the start time in milliseconds
+                    }
                     // Updates the marker for the user's current location on the map
                     markers = [
                         ...markers,
