@@ -438,11 +438,22 @@
         {/each}
         {#each markers as { lngLat, name }, i (i)}
             <Marker {lngLat}>
-                <!-- Use an image for the marker, like a treasure box icon -->
-                <img
-                    src="D:/2_MC265/Year 1/4_Positioning/GPS App/treasure-chest.png"
-                    alt="Treasure box"
-                    style="height: 40px; width: 40px;" /> <!-- Adjust size as needed -->
+                <!-- Use an SVG icon for the treasure box -->
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="40"
+                    fill="currentColor"
+                    class="bi bi-treasure-box"
+                    viewBox="0 0 16 16">
+                    <!-- SVG path data for the treasure box -->
+                    <path
+                        fill-rule="evenodd"
+                        d="M0 4.5A1.5 1.5 0 0 1 1.5 3h13A1.5 1.5 0 0 1 16 4.5v2a1.5 1.5 0 0 1-1.5 1.5H12v.5a.5.5 0 0 1-1 0V8H5v.5a.5.5 0 0 1-1 0V8H1.5A1.5 1.5 0 0 1 0 6.5v-2z" />
+                    <path
+                        fill-rule="evenodd"
+                        d="M1.5 12h13a1.5 1.5 0 0 0 1.5-1.5v-3h-16v3A1.5 1.5 0 0 0 1.5 12z" />
+                </svg>
 
                 <Popup
                     openOn="hover"
