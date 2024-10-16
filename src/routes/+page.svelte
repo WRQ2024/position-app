@@ -148,8 +148,8 @@
     function generateRandomTreasures(num) {
         const newTreasures = []
         for (let i = 0; i < num; i++) {
-            const lng = 144.95 + Math.random() * 0.04 // 随机生成经度
-            const lat = -37.81 + Math.random() * 0.03 // 随机生成纬度
+            const lng = 144.95 + Math.random() * 0.02 // 随机生成经度
+            const lat = -37.81 + Math.random() * 0.01 // 随机生成纬度
             newTreasures.push({ lngLat: { lng, lat }, found: false, name: `Treasure ${i + 1}` })
         }
         return newTreasures
