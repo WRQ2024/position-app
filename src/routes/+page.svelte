@@ -1,7 +1,8 @@
 <!-- <script> tag includes JavaScript code -->
 <script>
+    console.log('Script is loaded!') // testing
     import { onMount } from 'svelte'
-    import Geolocation from 'svelte-geolocation'
+    import Geolocation from 'svelte-geolocation' // testing
     import {
         Control,
         ControlButton,
