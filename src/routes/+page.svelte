@@ -146,11 +146,11 @@
             }
         })
     }
-    function generateRandomTreasures(num) {
+    function generateRandomTreasures(num, userLat, userLng) {
         const newTreasures = []
         for (let i = 0; i < num; i++) {
-            const lng = 144.95 + Math.random() * 0.02 // Random generation of longitude
-            const lat = -37.81 + Math.random() * 0.01 // Random generation of latitude
+            const lng = userLng + (Math.random() - 0.5) * 0.003 // Random generation of longitude
+            const lat = userLat + (Math.random() - 0.5) * 0.003 // Random generation of latitude
             newTreasures.push({ lngLat: { lng, lat }, found: false, name: `Treasure ${i + 1}` })
         }
         return newTreasures
@@ -181,8 +181,8 @@
                 treasure.lngLat.lng,
             )
 
-            // If the distance is less than 50 meters, mark the treasure as found.
-            if (distance < 0.05 && !treasure.found) { // 50 meters
+            // If the distance is less than 30 meters, mark the treasure as found.
+            if (distance < 0.03 && !treasure.found) { // 30 meters
                 treasure.found = true
                 updated = true
                 console.log(`Treasure found: ${treasure.name}`)
@@ -221,10 +221,6 @@
      */
     onMount(async () => {
         console.log('onMount is running!') // Check if onMount is executed
-        treasures = generateRandomTreasures(5) // Generate 5 random treasure spots
-        console.log('Generated treasures:', treasures) // Print Generated Treasure Points
-        const response = await fetch('melbourne.geojson')
-        geojsonData = await response.json()
     })
 </script>
 
@@ -253,7 +249,7 @@
             <!-- let:variable creates a variable for use from the component's return -->
             <Geolocation
                 {getPosition}
-                options={options}
+                options={{ enableHighAccuracy: true, timeout: Infinity, maximumAge: 0 }}
                 bind:position
                 let:loading
                 bind:success
@@ -261,7 +257,6 @@
                 let:notSupported
                 on:position={(e) => {
                     const userPosition = e.detail // Get current user location
-                    console.log('Current User Location:', userPosition.coords)
                     coords = [userPosition.coords.longitude, userPosition.coords.latitude]
                     // Updates the marker for the user's current location on the map
                     markers = [
@@ -443,7 +438,6 @@
                 <Popup>{treasure.name}</Popup>
             </Marker>
         {/each}
-
         {#each markers as { lngLat, label, name }, i (i)}
             <Marker
                 {lngLat}
