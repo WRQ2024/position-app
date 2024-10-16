@@ -89,6 +89,7 @@
     }
     let getPosition = false
     let success = false
+    let allTreasuresFound = false // Record whether all treasures have been found.
     let error = ''
     let position = {}
     let coords = []
@@ -193,6 +194,10 @@
 
         if (updated) {
             console.log('Treasures updated:', treasures)
+            // Check whether all treasures have been found
+            if (treasures.every(t => t.found)) {
+                allTreasuresFound = true // set as true
+            }
         }
     }
 
@@ -228,6 +233,11 @@
 
 <!-- This section demonstrates how to get the current user location -->
 <div class="flex flex-col h-[calc(100vh-80px)] w-full">
+    {#if allTreasuresFound}
+        <div class="absolute top-0 left-0 right-0 bg-green-500 text-white p-4 text-center">
+            🎉 Congratulations, you've found all the treasures! 🎉
+        </div>
+    {/if}
     <!-- grid, grid-cols-#, col-span-#, md:xxxx are some Tailwind utilities you can use for responsive design -->
     <div class="grid grid-cols-4">
         <div class="col-span-4 md:col-span-1 text-center">
@@ -265,7 +275,7 @@
                     ]
                     /// Generate treasure points that do not depend on success, but are generated directly after the location is fetched
                     if (!treasures.length) { // Ensure that it is only generated once
-                        treasures = generateRandomTreasures(5, coords[1], coords[0])
+                        treasures = generateRandomTreasures(3, coords[1], coords[0])
                         console.log('Generated Treasure:', treasures)
                     }
                 }}
