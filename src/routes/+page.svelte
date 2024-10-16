@@ -171,7 +171,7 @@
             return
         }
 
-        const updated = false // Checking to see if any treasure has been found
+        let updated = false // Checking to see if any treasure has been found
 
         treasures = treasures.map((treasure) => {
             const distance = haversine(
@@ -184,9 +184,16 @@
             // If the distance is less than 50 meters, mark the treasure as found.
             if (distance < 0.05 && !treasure.found) { // 50 meters
                 treasure.found = true
+                updated = true
                 console.log(`Treasure found: ${treasure.name}`)
             }
+
+            return treasure
         })
+
+        if (updated) {
+            console.log('Treasures updated:', treasures)
+        }
     }
 
     /**
