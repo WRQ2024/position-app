@@ -58,6 +58,7 @@
             name: 'This is a marker',
         },
     ]
+
     let treasures = [] // Storing Treasure Points
     let path = [] // storing the user's movement path
     // Extent of the map
