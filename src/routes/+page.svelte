@@ -149,13 +149,8 @@
     function generateRandomTreasures(num) {
         const newTreasures = []
         for (let i = 0; i < num; i++) {
-<<<<<<< HEAD
-            const lng = 144.95 + Math.random() * 0.04 // 随机生成经度
-            const lat = -37.81 + Math.random() * 0.03 // 随机生成纬度
-=======
             const lng = 144.95 + Math.random() * 0.02 // Random generation of longitude
             const lat = -37.81 + Math.random() * 0.01 // Random generation of latitude
->>>>>>> 92e45e6181f3998e0717d573c6cfb6ffba75d492
             newTreasures.push({ lngLat: { lng, lat }, found: false, name: `Treasure ${i + 1}` })
         }
         return newTreasures
@@ -176,13 +171,9 @@
             return
         }
 
-<<<<<<< HEAD
-        treasures.forEach((treasure) => {
-=======
-        let updated = false // Checking to see if any treasure has been found
+        const updated = false // Checking to see if any treasure has been found
 
         treasures = treasures.map((treasure) => {
->>>>>>> 92e45e6181f3998e0717d573c6cfb6ffba75d492
             const distance = haversine(
                 position.coords.latitude,
                 position.coords.longitude,
@@ -190,13 +181,8 @@
                 treasure.lngLat.lng,
             )
 
-<<<<<<< HEAD
-            // 距离小于 50 米，标记宝藏为已找到
-            if (distance < 0.05 && !treasure.found) { // 0.05 千米即 50 米
-=======
             // If the distance is less than 50 meters, mark the treasure as found.
             if (distance < 0.05 && !treasure.found) { // 50 meters
->>>>>>> 92e45e6181f3998e0717d573c6cfb6ffba75d492
                 treasure.found = true
                 console.log(`Treasure found: ${treasure.name}`)
             }
@@ -322,20 +308,13 @@
                 watch={true}
                 on:position={(e) => {
                     watchedPosition = e.detail
-<<<<<<< HEAD
-=======
                     position = watchedPosition // Ensure that the location is updated
->>>>>>> 92e45e6181f3998e0717d573c6cfb6ffba75d492
                     const newCoords = [watchedPosition.coords.longitude, watchedPosition.coords.latitude]
                     console.log('Watching position:', newCoords)
                     // Add new coordinates to the path
                     path = [...path, newCoords]
-<<<<<<< HEAD
-                    // Check if the user is close to the treasure
-=======
                     console.log('Updated path:', path)
                     // Check if the user is close to the treasure spot
->>>>>>> 92e45e6181f3998e0717d573c6cfb6ffba75d492
                     checkForTreasure()
                 }}
             />
@@ -457,17 +436,14 @@
                 <Popup>{treasure.name}</Popup>
             </Marker>
         {/each}
-        {#each markers as { lngLat, label, name }, i (i)}
-            <Marker
-                {lngLat}
-                class="grid h-8 w-14 place-items-center rounded-md border
-                    border-gray-200 bg-red-300 text-black shadow-2xl
-                    focus:outline-2 focus:outline-black"
-            >
-                <span>
-                    {label}
-                </span>
- 
+        {#each markers as { lngLat, name }, i (i)}
+            <Marker {lngLat}>
+                <!-- Use an image for the marker, like a treasure box icon -->
+                <img
+                    src="D:/2_MC265/Year 1/4_Positioning/GPS App/treasure-chest.png"
+                    alt="Treasure box"
+                    style="height: 40px; width: 40px;" /> <!-- Adjust size as needed -->
+
                 <Popup
                     openOn="hover"
                     offset={[0, -10]}>
