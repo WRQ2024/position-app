@@ -148,8 +148,8 @@
     function generateRandomTreasures(num) {
         const newTreasures = []
         for (let i = 0; i < num; i++) {
-            const lng = 144.95 + Math.random() * 0.02 // 随机生成经度
-            const lat = -37.81 + Math.random() * 0.01 // 随机生成纬度
+            const lng = 144.95 + Math.random() * 0.02 // Random generation of longitude
+            const lat = -37.81 + Math.random() * 0.01 // Random generation of latitude
             newTreasures.push({ lngLat: { lng, lat }, found: false, name: `Treasure ${i + 1}` })
         }
         return newTreasures
@@ -170,7 +170,7 @@
             return
         }
 
-        let updated = false // 检查是否有宝藏被找到
+        let updated = false // Checking to see if any treasure has been found
 
         treasures = treasures.map((treasure) => {
             const distance = haversine(
@@ -180,8 +180,8 @@
                 treasure.lngLat.lng,
             )
 
-            // 如果距离小于 50 米，标记宝藏为已找到
-            if (distance < 0.05 && !treasure.found) { // 50 米
+            // If the distance is less than 50 meters, mark the treasure as found.
+            if (distance < 0.05 && !treasure.found) { // 50 meters
                 treasure.found = true
                 updated = true
                 console.log(`Treasure found: ${treasure.name}`)
@@ -219,9 +219,9 @@
      * 'https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/melbourne.geojson'
      */
     onMount(async () => {
-        console.log('onMount is running!') // 检查 onMount 是否执行
-        treasures = generateRandomTreasures(5) // 生成 5 个随机宝藏点
-        console.log('Generated treasures:', treasures) // 打印生成的宝藏点
+        console.log('onMount is running!') // Check if onMount is executed
+        treasures = generateRandomTreasures(5) // Generate 5 random treasure spots
+        console.log('Generated treasures:', treasures) // Print Generated Treasure Points
         const response = await fetch('melbourne.geojson')
         geojsonData = await response.json()
     })
@@ -314,12 +314,12 @@
                 watch={true}
                 on:position={(e) => {
                     watchedPosition = e.detail
-                    position = watchedPosition // 确保更新位置
+                    position = watchedPosition // Ensure that the location is updated
                     const newCoords = [watchedPosition.coords.longitude, watchedPosition.coords.latitude]
                     console.log('Watching position:', newCoords)
-                    // 添加新坐标到路径
+                    // Add new coordinates to the path
                     path = [...path, newCoords]
-                    // 检查用户是否接近宝藏点
+                    // Check if the user is close to the treasure spot
                     checkForTreasure()
                 }}
             />
