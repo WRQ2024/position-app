@@ -145,15 +145,11 @@
             }
         })
     }
-
-    function generateRandomTreasures(num, userLat, userLng) {
+    function generateRandomTreasures(num) {
         const newTreasures = []
         for (let i = 0; i < num; i++) {
-            // 控制生成点的经纬度偏移，使宝藏点靠近用户
-            const lng = userLng + (Math.random() - 0.5) * 0.002 // 控制偏移范围更小
-            const lat = userLat + (Math.random() - 0.5) * 0.002 // 控制偏移范围更小
-
-            // 将生成的宝藏点存储起来
+            const lng = 144.95 + Math.random() * 0.04 // 随机生成经度
+            const lat = -37.81 + Math.random() * 0.03 // 随机生成纬度
             newTreasures.push({ lngLat: { lng, lat }, found: false, name: `Treasure ${i + 1}` })
         }
         return newTreasures
