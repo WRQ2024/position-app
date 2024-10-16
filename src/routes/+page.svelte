@@ -145,6 +145,7 @@
             }
         })
     }
+
     function generateRandomTreasures(num, userLat, userLng) {
         const newTreasures = []
         for (let i = 0; i < num; i++) {
