@@ -443,13 +443,17 @@
                 <Popup>{treasure.name}</Popup>
             </Marker>
         {/each}
-        {#each markers as { lngLat, name }, i (i)}
-            <Marker {lngLat}>
-                <!-- Use an image for the marker, like a treasure box icon -->
-                <img
-                    src="/treasurebox.png"
-                    alt="Treasure box"
-                    style="height: 40px; width: 40px;" /> <!-- Adjust size as needed -->
+
+        {#each markers as { lngLat, label, name }, i (i)}
+            <Marker
+                {lngLat}
+                class="grid h-8 w-14 place-items-center rounded-md border
+                    border-gray-200 bg-red-300 text-black shadow-2xl
+                    focus:outline-2 focus:outline-black"
+            >
+                <span>
+                    {label}
+                </span>
 
                 <Popup
                     openOn="hover"

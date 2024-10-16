@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      position-app:
+        specifier: 'link:'
+        version: 'link:'
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^3.5.1
