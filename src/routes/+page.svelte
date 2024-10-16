@@ -92,7 +92,7 @@
     let error = ''
     let position = {}
     let coords = []
-
+    // const heading = null // Initialize heading variable shirine
     /**
      * $: indicates a reactive statement, meaning that this block of code is
      * executed whenever the variable used as the condition changes its value
@@ -264,10 +264,10 @@
                     console.log('Current User Location:', userPosition.coords)
                     coords = [userPosition.coords.longitude, userPosition.coords.latitude]
                     // Updates the marker for the user's current location on the map
-                    markers = [
-                        ...markers,
-                        { lngLat: { lng: coords[0], lat: coords[1] }, label: 'Current', name: 'Current Position' },
-                    ]
+                    // markers = [
+                        // ...markers,
+                        // { lngLat: { lng: coords[0], lat: coords[1] }, label: 'Current', name: 'Current Position' },
+                    // ]
                     /// Generate treasure points that do not depend on success, but are generated directly after the location is fetched
                     if (!treasures.length) { // Ensure that it is only generated once
                         treasures = generateRandomTreasures(5, coords[1], coords[0])
@@ -444,17 +444,16 @@
             </Marker>
         {/each}
 
+        <!-- Display the predefined markers (Marker 1, Marker 2, Marker 3) with one symbol -->
         {#each markers as { lngLat, label, name }, i (i)}
             <Marker
                 {lngLat}
-                class="grid h-8 w-14 place-items-center rounded-md border
-                    border-gray-200 bg-red-300 text-black shadow-2xl
-                    focus:outline-2 focus:outline-black"
-            >
+                class="grid h-8 w-14 place-items-center rounded-md border border-gray-200 bg-blue-300 text-black shadow-2xl focus:outline-2 focus:outline-black">
+                <!-- Custom symbol for predefined markers -->
                 <span>
                     {label}
                 </span>
-
+                <span>📍</span> <!-- You can replace this with an icon or an image -->
                 <Popup
                     openOn="hover"
                     offset={[0, -10]}>
@@ -462,6 +461,19 @@
                 </Popup>
             </Marker>
         {/each}
+
+        <!-- Display the current position marker with a different symbol -->
+        {#if coords.length}
+            <Marker lngLat={{ lng: coords[0], lat: coords[1] }}>
+                <!-- Custom symbol for the current marker -->
+                <span>🧭</span> <!-- You can replace this with an icon or an image -->
+                <Popup
+                    openOn="hover"
+                    offset={[0, -10]}>
+                    <div class="text-lg font-bold">Current</div>
+                </Popup>
+            </Marker>
+        {/if}
 
         <!-- Display the watched position as a marker -->
         {#if watchedMarker.lngLat}
