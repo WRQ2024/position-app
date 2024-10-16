@@ -466,6 +466,16 @@
                 </Popup>
             </Marker>
         {/each}
+
+        {#if coords.length}
+            <Marker lngLat={{ lng: coords[0], lat: coords[1] }}>
+                <span>🧭</span> <!-- Compass for current position -->
+                <Popup>
+                    <div class="text-lg font-bold">Current</div>
+                </Popup>
+            </Marker>
+        {/if}
+
         <!-- Display the watched position as a marker -->
         {#if watchedMarker.lngLat}
             <DefaultMarker lngLat={watchedMarker.lngLat}>
