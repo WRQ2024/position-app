@@ -320,6 +320,7 @@
                     console.log('Watching position:', newCoords)
                     // Add new coordinates to the path
                     path = [...path, newCoords]
+                    console.log('Updated path:', path)
                     // Check if the user is close to the treasure spot
                     checkForTreasure()
                 }}
@@ -359,6 +360,23 @@
         bind:bounds
         zoom={14}
     >
+        {#if path.length > 1}
+            <GeoJSON
+                data={{
+                    type: 'Feature',
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: path,
+                    },
+                }}
+            >
+                <LineLayer
+                    layout={{ 'line-cap': 'round', 'line-join': 'round' }}
+                    paint={{ 'line-color': 'blue', 'line-width': 3 }}
+                    beforeLayerType="symbol"
+                />
+            </GeoJSON>
+        {/if}
         <!-- Custom control buttons -->
         <Control class="flex flex-col gap-y-2">
             <ControlGroup>
