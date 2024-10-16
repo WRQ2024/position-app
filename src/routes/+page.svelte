@@ -89,6 +89,11 @@
     }
     let getPosition = false
     let success = false
+    let totalDistance = 0 // To store the total distance walked
+    let allTreasuresFound = false // Record whether all treasures have been found.
+    let countFound = 0 // Count of treasures found
+    let startTime = null // Record the start time when the first location is fetched
+    let elapsedTime = 0 // Store the time it took to find all treasures
     let error = ''
     let position = {}
     let coords = []
@@ -146,11 +151,11 @@
             }
         })
     }
-    function generateRandomTreasures(num) {
+    function generateRandomTreasures(num, userLat, userLng) {
         const newTreasures = []
         for (let i = 0; i < num; i++) {
-            const lng = 144.95 + Math.random() * 0.02 // Random generation of longitude
-            const lat = -37.81 + Math.random() * 0.01 // Random generation of latitude
+            const lng = userLng + (Math.random() - 0.5) * 0.001 // Random generation of longitude
+            const lat = userLat + (Math.random() - 0.5) * 0.001 // Random generation of latitude
             newTreasures.push({ lngLat: { lng, lat }, found: false, name: `Treasure ${i + 1}` })
         }
         return newTreasures
@@ -164,15 +169,18 @@
             = 0.5 - Math.cos(dLat) / 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * (1 - Math.cos(dLon)) / 2
         return R * 2 * Math.asin(Math.sqrt(a))
     }
-
-    function checkForTreasure() {
-        if (!position.coords || Number.isNaN(position.coords.latitude) || Number.isNaN(position.coords.longitude)) {
-            console.error('Invalid user position, cannot check for treasure.')
-            return
+    // Function to calculate the distance between two points and update total distance
+    function calculateDistance(newCoords) {
+        // If there is at least one point in the path, calculate the distance from the last point
+        if (path.length > 0) {
+            const lastCoords = path[path.length - 1]
+            const distance = haversine(lastCoords[1], lastCoords[0], newCoords[1], newCoords[0])
+            totalDistance += distance * 1000 // Convert to meters
         }
-
-        let updated = false // Checking to see if any treasure has been found
-
+        path = [...path, newCoords] // Update the path with the new coordinates
+    }
+    function checkForTreasure() {
+        if (!position.coords) { return }
         treasures = treasures.map((treasure) => {
             const distance = haversine(
                 position.coords.latitude,
@@ -180,19 +188,17 @@
                 treasure.lngLat.lat,
                 treasure.lngLat.lng,
             )
-
-            // If the distance is less than 50 meters, mark the treasure as found.
-            if (distance < 0.05 && !treasure.found) { // 50 meters
+            if (distance < 0.02 && !treasure.found) { // 20 meters threshold
                 treasure.found = true
-                updated = true
+                countFound += 1
                 console.log(`Treasure found: ${treasure.name}`)
             }
-
             return treasure
         })
 
-        if (updated) {
-            console.log('Treasures updated:', treasures)
+        if (countFound === treasures.length) {
+            allTreasuresFound = true // Set the flag when all treasures are found
+            elapsedTime = Math.floor((Date.now() - startTime) / 1000) // Calculate elapsed time in seconds
         }
     }
 
@@ -221,10 +227,6 @@
      */
     onMount(async () => {
         console.log('onMount is running!') // Check if onMount is executed
-        treasures = generateRandomTreasures(5) // Generate 5 random treasure spots
-        console.log('Generated treasures:', treasures) // Print Generated Treasure Points
-        const response = await fetch('melbourne.geojson')
-        geojsonData = await response.json()
     })
 </script>
 
@@ -232,6 +234,13 @@
 
 <!-- This section demonstrates how to get the current user location -->
 <div class="flex flex-col h-[calc(100vh-80px)] w-full">
+    {#if allTreasuresFound}
+        <div class="absolute top-0 left-0 right-0 bg-green-500 text-white p-4 text-center">
+            🎉 Congratulations, you've found all the treasures! 🎉<br>
+            You walked a total of {totalDistance.toFixed(2)} meters.<br>
+            Time taken: {Math.floor(elapsedTime / 60)} minutes {elapsedTime % 60} seconds.
+        </div>
+    {/if}
     <!-- grid, grid-cols-#, col-span-#, md:xxxx are some Tailwind utilities you can use for responsive design -->
     <div class="grid grid-cols-4">
         <div class="col-span-4 md:col-span-1 text-center">
@@ -253,7 +262,7 @@
             <!-- let:variable creates a variable for use from the component's return -->
             <Geolocation
                 {getPosition}
-                options={options}
+                options={{ enableHighAccuracy: true, timeout: Infinity, maximumAge: 0 }}
                 bind:position
                 let:loading
                 bind:success
@@ -261,8 +270,10 @@
                 let:notSupported
                 on:position={(e) => {
                     const userPosition = e.detail // Get current user location
-                    console.log('Current User Location:', userPosition.coords)
                     coords = [userPosition.coords.longitude, userPosition.coords.latitude]
+                    if (!startTime) {
+                        startTime = Date.now() // Store the start time in milliseconds
+                    }
                     // Updates the marker for the user's current location on the map
                     // markers = [
                         // ...markers,
@@ -270,7 +281,7 @@
                     // ]
                     /// Generate treasure points that do not depend on success, but are generated directly after the location is fetched
                     if (!treasures.length) { // Ensure that it is only generated once
-                        treasures = generateRandomTreasures(5, coords[1], coords[0])
+                        treasures = generateRandomTreasures(3, coords[1], coords[0])
                         console.log('Generated Treasure:', treasures)
                     }
                 }}
@@ -317,12 +328,8 @@
                     watchedPosition = e.detail
                     position = watchedPosition // Ensure that the location is updated
                     const newCoords = [watchedPosition.coords.longitude, watchedPosition.coords.latitude]
-                    console.log('Watching position:', newCoords)
-                    // Add new coordinates to the path
-                    path = [...path, newCoords]
-                    console.log('Updated path:', path)
-                    // Check if the user is close to the treasure spot
-                    checkForTreasure()
+                    calculateDistance(newCoords) // Calculate and add to total distance
+                    checkForTreasure() // Check if a treasure is found
                 }}
             />
 
@@ -443,8 +450,11 @@
                 <Popup>{treasure.name}</Popup>
             </Marker>
         {/each}
+<<<<<<< HEAD
 
         <!-- Display the predefined markers (Marker 1, Marker 2, Marker 3) with one symbol -->
+=======
+>>>>>>> 78aae582b89486d775c4943d1c5909edd4623ee4
         {#each markers as { lngLat, label, name }, i (i)}
             <Marker
                 {lngLat}
