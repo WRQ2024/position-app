@@ -440,7 +440,7 @@
             <Marker {lngLat}>
                 <!-- Use an image for the marker, like a treasure box icon -->
                 <img
-                    src="static\treasure-chest.png"
+                    src="/treasurebox.png"
                     alt="Treasure box"
                     style="height: 40px; width: 40px;" /> <!-- Adjust size as needed -->
 
