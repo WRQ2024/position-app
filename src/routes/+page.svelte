@@ -149,8 +149,13 @@
     function generateRandomTreasures(num) {
         const newTreasures = []
         for (let i = 0; i < num; i++) {
+<<<<<<< HEAD
             const lng = 144.95 + Math.random() * 0.04 // 随机生成经度
             const lat = -37.81 + Math.random() * 0.03 // 随机生成纬度
+=======
+            const lng = 144.95 + Math.random() * 0.02 // Random generation of longitude
+            const lat = -37.81 + Math.random() * 0.01 // Random generation of latitude
+>>>>>>> 92e45e6181f3998e0717d573c6cfb6ffba75d492
             newTreasures.push({ lngLat: { lng, lat }, found: false, name: `Treasure ${i + 1}` })
         }
         return newTreasures
@@ -171,7 +176,13 @@
             return
         }
 
+<<<<<<< HEAD
         treasures.forEach((treasure) => {
+=======
+        let updated = false // Checking to see if any treasure has been found
+
+        treasures = treasures.map((treasure) => {
+>>>>>>> 92e45e6181f3998e0717d573c6cfb6ffba75d492
             const distance = haversine(
                 position.coords.latitude,
                 position.coords.longitude,
@@ -179,8 +190,13 @@
                 treasure.lngLat.lng,
             )
 
+<<<<<<< HEAD
             // 距离小于 50 米，标记宝藏为已找到
             if (distance < 0.05 && !treasure.found) { // 0.05 千米即 50 米
+=======
+            // If the distance is less than 50 meters, mark the treasure as found.
+            if (distance < 0.05 && !treasure.found) { // 50 meters
+>>>>>>> 92e45e6181f3998e0717d573c6cfb6ffba75d492
                 treasure.found = true
                 console.log(`Treasure found: ${treasure.name}`)
             }
@@ -211,9 +227,9 @@
      * 'https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/melbourne.geojson'
      */
     onMount(async () => {
-        console.log('onMount is running!') // 检查 onMount 是否执行
-        treasures = generateRandomTreasures(5) // 生成 5 个随机宝藏点
-        console.log('Generated treasures:', treasures) // 打印生成的宝藏点
+        console.log('onMount is running!') // Check if onMount is executed
+        treasures = generateRandomTreasures(5) // Generate 5 random treasure spots
+        console.log('Generated treasures:', treasures) // Print Generated Treasure Points
         const response = await fetch('melbourne.geojson')
         geojsonData = await response.json()
     })
@@ -306,11 +322,20 @@
                 watch={true}
                 on:position={(e) => {
                     watchedPosition = e.detail
+<<<<<<< HEAD
+=======
+                    position = watchedPosition // Ensure that the location is updated
+>>>>>>> 92e45e6181f3998e0717d573c6cfb6ffba75d492
                     const newCoords = [watchedPosition.coords.longitude, watchedPosition.coords.latitude]
                     console.log('Watching position:', newCoords)
                     // Add new coordinates to the path
                     path = [...path, newCoords]
+<<<<<<< HEAD
                     // Check if the user is close to the treasure
+=======
+                    console.log('Updated path:', path)
+                    // Check if the user is close to the treasure spot
+>>>>>>> 92e45e6181f3998e0717d573c6cfb6ffba75d492
                     checkForTreasure()
                 }}
             />
@@ -349,6 +374,23 @@
         bind:bounds
         zoom={14}
     >
+        {#if path.length > 1}
+            <GeoJSON
+                data={{
+                    type: 'Feature',
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: path,
+                    },
+                }}
+            >
+                <LineLayer
+                    layout={{ 'line-cap': 'round', 'line-join': 'round' }}
+                    paint={{ 'line-color': 'blue', 'line-width': 3 }}
+                    beforeLayerType="symbol"
+                />
+            </GeoJSON>
+        {/if}
         <!-- Custom control buttons -->
         <Control class="flex flex-col gap-y-2">
             <ControlGroup>
