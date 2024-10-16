@@ -450,20 +450,15 @@
                 <Popup>{treasure.name}</Popup>
             </Marker>
         {/each}
-<<<<<<< HEAD
-
-        <!-- Display the predefined markers (Marker 1, Marker 2, Marker 3) with one symbol -->
-=======
->>>>>>> 78aae582b89486d775c4943d1c5909edd4623ee4
         {#each markers as { lngLat, label, name }, i (i)}
             <Marker
                 {lngLat}
-                class="grid h-8 w-14 place-items-center rounded-md border border-gray-200 bg-blue-300 text-black shadow-2xl focus:outline-2 focus:outline-black">
-                <!-- Custom symbol for predefined markers -->
+                class="grid h-8 w-14 place-items-center rounded-md border border-gray-200 bg-red-300 text-black shadow-2xl focus:outline-2 focus:outline-black"
+            >
                 <span>
                     {label}
                 </span>
-                <span>📍</span> <!-- You can replace this with an icon or an image -->
+
                 <Popup
                     openOn="hover"
                     offset={[0, -10]}>
@@ -471,20 +466,6 @@
                 </Popup>
             </Marker>
         {/each}
-
-        <!-- Display the current position marker with a different symbol -->
-        {#if coords.length}
-            <Marker lngLat={{ lng: coords[0], lat: coords[1] }}>
-                <!-- Custom symbol for the current marker -->
-                <span>🧭</span> <!-- You can replace this with an icon or an image -->
-                <Popup
-                    openOn="hover"
-                    offset={[0, -10]}>
-                    <div class="text-lg font-bold">Current</div>
-                </Popup>
-            </Marker>
-        {/if}
-
         <!-- Display the watched position as a marker -->
         {#if watchedMarker.lngLat}
             <DefaultMarker lngLat={watchedMarker.lngLat}>
