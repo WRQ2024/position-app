@@ -145,6 +145,7 @@
             }
         })
     }
+
     function generateRandomTreasures(num, userLat, userLng) {
         const newTreasures = []
         for (let i = 0; i < num; i++) {
@@ -160,6 +161,7 @@
         }
         return newTreasures
     }
+
     function haversine(lat1, lon1, lat2, lon2) {
         const R = 6371 // Radius of the Earth in kilometers
         const dLat = (lat2 - lat1) * Math.PI / 180
