@@ -7,7 +7,7 @@
         Control,
         ControlButton,
         ControlGroup,
-        DefaultMarker,
+        // DefaultMarker,
         FillLayer,
         GeoJSON,
         hoverStateFilter,
@@ -38,24 +38,24 @@
                 lng: 144.9638347277324,
                 lat: -37.80967960080751,
             },
-            label: 'Marker 1',
-            name: 'This is a marker',
+            label: 'Meetup Point 1',
+            name: 'Event',
         },
         {
             lngLat: {
                 lng: 144.96318039790924,
                 lat: -37.808357984258315,
             },
-            label: 'Marker 2',
-            name: 'This is a marker',
+            label: 'Meetup Point 2',
+            name: 'Event',
         },
         {
             lngLat: {
                 lng: 144.96280297287632,
                 lat: -37.80668719932231,
             },
-            label: 'Marker 3',
-            name: 'This is a marker',
+            label: 'Meetup Point 3',
+            name: 'Event',
         },
     ]
 
@@ -151,6 +151,7 @@
             }
         })
     }
+
     function generateRandomTreasures(num, userLat, userLng) {
         const newTreasures = []
         for (let i = 0; i < num; i++) {
@@ -445,15 +446,10 @@
                 <Popup>{treasure.name}</Popup>
             </Marker>
         {/each}
-        {#each markers as { lngLat, label, name }, i (i)}
-            <Marker
-                {lngLat}
-                class="grid h-8 w-14 place-items-center rounded-md border border-gray-200 bg-red-300 text-black shadow-2xl focus:outline-2 focus:outline-black"
-            >
-                <span>
-                    {label}
-                </span>
-
+        {#each markers as { lngLat, name }, i (i)}
+            <Marker {lngLat}>
+                <!-- Replace the marker symbol with an emoji -->
+                <span style="font-size: 20px;">🗓️</span>
                 <Popup
                     openOn="hover"
                     offset={[0, -10]}>
@@ -477,13 +473,16 @@
 
         <!-- Display the watched position as a marker -->
         {#if watchedMarker.lngLat}
-            <DefaultMarker lngLat={watchedMarker.lngLat}>
+            <Marker lngLat={watchedMarker.lngLat}>
+                <!-- Replace the default pin with a gender-neutral head emoji -->
+                <span style="font-size: 30px;">🧑</span>
                 <Popup offset={[0, -10]}>
                     <div class="text-lg font-bold">You</div>
                 </Popup>
-            </DefaultMarker>
+            </Marker>
         {/if}
     </MapLibre>
+
 </div>
 
 <!-- Optionally, you can have a <style> tag for CSS at the end, but with TailwindCSS it is usually not necessary -->
