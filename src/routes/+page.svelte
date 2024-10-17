@@ -274,12 +274,7 @@
                     if (!startTime) {
                         startTime = Date.now() // Store the start time in milliseconds
                     }
-                    // Updates the marker for the user's current location on the map
-                    // markers = [
-                        // ...markers,
-                        // { lngLat: { lng: coords[0], lat: coords[1] }, label: 'Current', name: 'Current Position' },
-                    // ]
-                    /// Generate treasure points that do not depend on success, but are generated directly after the location is fetched
+                    // shirine deleted something
                     if (!treasures.length) { // Ensure that it is only generated once
                         treasures = generateRandomTreasures(3, coords[1], coords[0])
                         console.log('Generated Treasure:', treasures)
@@ -466,12 +461,16 @@
                 </Popup>
             </Marker>
         {/each}
-
         {#if coords.length}
-            <Marker lngLat={{ lng: coords[0], lat: coords[1] }}>
-                <span>🧭</span> <!-- Compass for current position -->
-                <Popup>
-                    <div class="text-lg font-bold">Current</div>
+            <Marker
+                lngLat={{ lng: coords[0], lat: coords[1] }}
+                class="flex items-center justify-center w-12 h-12 rounded-full bg-green-5 border border-white text-white shadow-lg"
+            >
+                <span>📍</span>
+                <Popup
+                    openOn="hover"
+                    offset={[0, -10]}>
+                    <div class="text-lg font-bold">Current Position</div>
                 </Popup>
             </Marker>
         {/if}
