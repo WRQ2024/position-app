@@ -112,14 +112,14 @@
 
     $: if (success) {
         coords = [position.coords.longitude, position.coords.latitude]
-        markers = [
-            ...markers,
-            {
-                lngLat: { lng: coords[0], lat: coords[1] },
-                label: 'Current',
-                name: 'This is the current position',
-            },
-        ]
+    // markers = [
+            // ...markers,
+            // {
+                // lngLat: { lng: coords[0], lat: coords[1] },
+                // label: 'Current',
+                // name: 'This is the current position',
+            // },
+        // ]
     }
 
     // Watch a position using Geolocation API if you need continuous updates
