@@ -97,7 +97,7 @@
     let error = ''
     let position = {}
     let coords = []
-    // const heading = null // Initialize heading variable shirine
+
     /**
      * $: indicates a reactive statement, meaning that this block of code is
      * executed whenever the variable used as the condition changes its value
@@ -112,14 +112,14 @@
 
     $: if (success) {
         coords = [position.coords.longitude, position.coords.latitude]
-    // markers = [
-            // ...markers,
-            // {
-                // lngLat: { lng: coords[0], lat: coords[1] },
-                // label: 'Current',
-                // name: 'This is the current position',
-            // },
-        // ]
+        markers = [
+            ...markers,
+            {
+                lngLat: { lng: coords[0], lat: coords[1] },
+                label: 'Current',
+                name: 'This is the current position',
+            },
+        ]
     }
 
     // Watch a position using Geolocation API if you need continuous updates
@@ -227,6 +227,8 @@
      * 'https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/melbourne.geojson'
      */
     onMount(async () => {
+        const response = await fetch('melbourne.geojson')
+        geojsonData = await response.json()
         console.log('onMount is running!') // Check if onMount is executed
     })
 </script>
@@ -275,7 +277,12 @@
                     if (!startTime) {
                         startTime = Date.now() // Store the start time in milliseconds
                     }
-                    // shirine deleted something
+                    // Updates the marker for the user's current location on the map
+                    markers = [
+                        ...markers,
+                        { lngLat: { lng: coords[0], lat: coords[1] }, label: 'Current', name: 'Current Position' },
+                    ]
+                    /// Generate treasure points that do not depend on success, but are generated directly after the location is fetched
                     if (!treasures.length) { // Ensure that it is only generated once
                         treasures = generateRandomTreasures(3, coords[1], coords[0])
                         console.log('Generated Treasure:', treasures)
@@ -457,19 +464,6 @@
                 </Popup>
             </Marker>
         {/each}
-        {#if coords.length}
-            <Marker
-                lngLat={{ lng: coords[0], lat: coords[1] }}
-                class="flex items-center justify-center w-12 h-12 rounded-full bg-green-5 border border-white text-white shadow-lg"
-            >
-                <span>📍</span>
-                <Popup
-                    openOn="hover"
-                    offset={[0, -10]}>
-                    <div class="text-lg font-bold">Current Position</div>
-                </Popup>
-            </Marker>
-        {/if}
 
         <!-- Display the watched position as a marker -->
         {#if watchedMarker.lngLat}
