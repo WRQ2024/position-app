@@ -35,8 +35,8 @@
     let markers = [
         {
             lngLat: {
-                lng: 144.9638347277324,
-                lat: -37.80967960080751,
+                lng: 144.9713347277324,
+                lat: -37.8055660080751,
             },
             label: 'Meetup Point 1',
             name: 'Event',
