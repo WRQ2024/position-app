@@ -4,6 +4,7 @@
     import { onMount } from 'svelte'
     import Geolocation from 'svelte-geolocation' // testing
     import {
+        CircleLayer,
         Control,
         ControlButton,
         ControlGroup,
@@ -35,8 +36,8 @@
     let markers = [
         {
             lngLat: {
-                lng: 144.9713347277324,
-                lat: -37.8055660080751,
+                lng: 144.9544116277324,
+                lat: -37.8104430080751,
             },
             label: 'Meetup Point 1',
             name: 'Event',
@@ -63,7 +64,7 @@
     let path = [] // storing the user's movement path
     // Extent of the map
     let bounds = getMapBounds(markers)
-
+    let poiData = null
     /**
      * Declaring a function
      *
@@ -229,7 +230,10 @@
     onMount(async () => {
         const response = await fetch('melbourne.geojson')
         geojsonData = await response.json()
+        const poiResponse = await fetch('landmarks-and-places-of-interest-including-schools-theatres-health-services-spor.geojson')
+        poiData = await poiResponse.json()
         console.log('onMount is running!') // Check if onMount is executed
+        console.log('POI Data:', poiData) // Debugging point
     })
 </script>
 
@@ -438,7 +442,48 @@
                 />
             </GeoJSON>
         {/if}
-
+        <!-- Adding POI rendering without affecting Melbourne -->
+        {#if poiData}
+            <GeoJSON
+                data={poiData}
+                promoteId="id"
+            >
+                <CircleLayer
+                    paint={{
+                        'circle-color': [
+                            'match',
+                            ['get', 'sub_theme'],
+                            'Church',
+                            '#FF0000',
+                            'Railway Station',
+                            '#00FF00',
+                            'Art Gallery/Museum',
+                            '#0000FF',
+                            'Theatre Live',
+                            '#FF00FF',
+                            'Major Sports & Recreation Facility',
+                            '#FFFF00',
+                            'Informal Outdoor Facility (Park/Garden/Reserve)',
+                            '#FFA500',
+                            '#CCCCCC', // 默认值
+                        ],
+                        // 设置点的大小
+                        'circle-radius': 4,
+                    }}
+                />
+                <Popup
+                    openOn="hover"
+                    let:data>
+                    {@const props = data?.properties}
+                    {#if props}
+                        <div>
+                            <p>{props.feature_name}</p> <!-- 显示兴趣点的名称 -->
+                            <p>{props.sub_theme}</p> <!-- 显示兴趣点的类型 sub_theme -->
+                        </div>
+                    {/if}
+                </Popup>
+            </GeoJSON>
+        {/if}
         <!-- Displaying markers, this is reactive -->
         <!-- For-each loop syntax -->
         <!-- markers is an object, lngLat, label, name are the fields in the object -->
