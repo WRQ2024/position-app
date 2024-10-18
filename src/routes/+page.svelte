@@ -35,8 +35,8 @@
     let markers = [
         {
             lngLat: {
-                lng: 144.95427707277324,
-                lat: -37.81054660080751,
+                lng: 144.9713347277324,
+                lat: -37.8055660080751,
             },
             label: 'Meetup Point 1',
             name: 'Event',
@@ -112,14 +112,14 @@
 
     $: if (success) {
         coords = [position.coords.longitude, position.coords.latitude]
-        markers = [
-            ...markers,
-            {
-                lngLat: { lng: coords[0], lat: coords[1] },
-                label: 'Current',
-                name: 'This is the current position',
-            },
-        ]
+    // markers = [
+            // ...markers,
+            // {
+                // lngLat: { lng: coords[0], lat: coords[1] },
+                // label: 'Current',
+                // name: 'This is the current position',
+            // },
+        // ]
     }
 
     // Watch a position using Geolocation API if you need continuous updates
@@ -278,10 +278,10 @@
                         startTime = Date.now() // Store the start time in milliseconds
                     }
                     // Updates the marker for the user's current location on the map
-                    markers = [
-                        ...markers,
-                        { lngLat: { lng: coords[0], lat: coords[1] }, label: 'Current', name: 'Current Position' },
-                    ]
+                    // markers = [
+                        // ...markers,
+                        // { lngLat: { lng: coords[0], lat: coords[1] }, label: 'Current', name: 'Current Position' },
+                    // ]
                     /// Generate treasure points that do not depend on success, but are generated directly after the location is fetched
                     if (!treasures.length) { // Ensure that it is only generated once
                         treasures = generateRandomTreasures(3, coords[1], coords[0])
@@ -464,7 +464,20 @@
                 </Popup>
             </Marker>
         {/each}
-
+        <!-- Display the current position as a pin point -->
+        {#if coords.length}
+            <Marker
+                lngLat={{ lng: coords[0], lat: coords[1] }}
+                class="flex items-center justify-center w-12 h-12 rounded-full bg-green-5 border border-white text-white shadow-lg"
+            >
+                <span>📍</span>
+                <Popup
+                    openOn="hover"
+                    offset={[0, -10]}>
+                    <div class="text-lg font-bold">Current Position</div>
+                </Popup>
+            </Marker>
+        {/if}
         <!-- Display the watched position as a marker -->
         {#if watchedMarker.lngLat}
             <Marker lngLat={watchedMarker.lngLat}>
