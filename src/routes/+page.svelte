@@ -465,9 +465,9 @@
                             '#FFFF00',
                             'Informal Outdoor Facility (Park/Garden/Reserve)',
                             '#FFA500',
-                            '#CCCCCC', // 默认值
+                            '#CCCCCC', // default
                         ],
-                        // 设置点的大小
+                        // setpointsize
                         'circle-radius': 4,
                     }}
                 />
@@ -477,8 +477,8 @@
                     {@const props = data?.properties}
                     {#if props}
                         <div>
-                            <p>{props.feature_name}</p> <!-- 显示兴趣点的名称 -->
-                            <p>{props.sub_theme}</p> <!-- 显示兴趣点的类型 sub_theme -->
+                            <p>{props.feature_name}</p> <!-- poiname -->
+                            <p>{props.sub_theme}</p> <!-- poitheme -->
                         </div>
                     {/if}
                 </Popup>
