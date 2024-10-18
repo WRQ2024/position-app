@@ -35,24 +35,24 @@
     let markers = [
         {
             lngLat: {
-                lng: 144.9638347277324,
-                lat: -37.80967960080751,
+                lng: 144.95427707277324,
+                lat: -37.81054660080751,
             },
             label: 'Meetup Point 1',
             name: 'Event',
         },
         {
             lngLat: {
-                lng: 144.96318039790924,
-                lat: -37.808357984258315,
+                lng: 144.971203911200092,
+                lat: -37.806551414258315,
             },
             label: 'Meetup Point 2',
             name: 'Event',
         },
         {
             lngLat: {
-                lng: 144.96280297287632,
-                lat: -37.80668719932231,
+                lng: 144.98027153287632,
+                lat: -37.81344861932231,
             },
             label: 'Meetup Point 3',
             name: 'Event',
