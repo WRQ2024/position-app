@@ -4,6 +4,7 @@
     import { onMount } from 'svelte'
     import Geolocation from 'svelte-geolocation' // testing
     import {
+        CircleLayer,
         Control,
         ControlButton,
         ControlGroup,
@@ -35,24 +36,24 @@
     let markers = [
         {
             lngLat: {
-                lng: 144.9713347277324,
-                lat: -37.8055660080751,
+                lng: 144.9544116277324,
+                lat: -37.8104430080751,
             },
             label: 'Meetup Point 1',
             name: 'Event',
         },
         {
             lngLat: {
-                lng: 144.96318039790924,
-                lat: -37.808357984258315,
+                lng: 144.971203911200092,
+                lat: -37.806551414258315,
             },
             label: 'Meetup Point 2',
             name: 'Event',
         },
         {
             lngLat: {
-                lng: 144.96280297287632,
-                lat: -37.80668719932231,
+                lng: 144.98027153287632,
+                lat: -37.81344861932231,
             },
             label: 'Meetup Point 3',
             name: 'Event',
@@ -63,7 +64,7 @@
     let path = [] // storing the user's movement path
     // Extent of the map
     let bounds = getMapBounds(markers)
-
+    let poiData = null
     /**
      * Declaring a function
      *
@@ -229,7 +230,10 @@
     onMount(async () => {
         const response = await fetch('melbourne.geojson')
         geojsonData = await response.json()
+        const poiResponse = await fetch('landmarks-and-places-of-interest-including-schools-theatres-health-services-spor.geojson')
+        poiData = await poiResponse.json()
         console.log('onMount is running!') // Check if onMount is executed
+        console.log('POI Data:', poiData) // Debugging point
     })
 </script>
 
@@ -438,7 +442,48 @@
                 />
             </GeoJSON>
         {/if}
-
+        <!-- Adding POI rendering without affecting Melbourne -->
+        {#if poiData}
+            <GeoJSON
+                data={poiData}
+                promoteId="id"
+            >
+                <CircleLayer
+                    paint={{
+                        'circle-color': [
+                            'match',
+                            ['get', 'sub_theme'],
+                            'Church',
+                            '#FF0000',
+                            'Railway Station',
+                            '#00FF00',
+                            'Art Gallery/Museum',
+                            '#0000FF',
+                            'Theatre Live',
+                            '#FF00FF',
+                            'Major Sports & Recreation Facility',
+                            '#FFFF00',
+                            'Informal Outdoor Facility (Park/Garden/Reserve)',
+                            '#FFA500',
+                            '#CCCCCC', // default
+                        ],
+                        // setpointsize
+                        'circle-radius': 4,
+                    }}
+                />
+                <Popup
+                    openOn="hover"
+                    let:data>
+                    {@const props = data?.properties}
+                    {#if props}
+                        <div>
+                            <p>{props.feature_name}</p> <!-- poiname -->
+                            <p>{props.sub_theme}</p> <!-- poitheme -->
+                        </div>
+                    {/if}
+                </Popup>
+            </GeoJSON>
+        {/if}
         <!-- Displaying markers, this is reactive -->
         <!-- For-each loop syntax -->
         <!-- markers is an object, lngLat, label, name are the fields in the object -->
