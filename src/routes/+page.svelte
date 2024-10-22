@@ -235,6 +235,17 @@
         console.log('onMount is running!') // Check if onMount is executed
         console.log('POI Data:', poiData) // Debugging point
     })
+
+    onMount(async () => {
+        try {
+            const response = await fetch('/cafes_and_restaurants_with_seating_capacity.geojson')
+            geojsonData = await response.json()
+            console.log('Loaded GeoJSON data:', geojsonData)
+        }
+        catch (error) {
+            console.error('Error loading GeoJSON data:', error)
+        }
+    })
 </script>
 
 <!-- Everything after <script> will be HTML for rendering -->
@@ -374,6 +385,7 @@
         bind:bounds
         zoom={14}
     >
+
         {#if path.length > 1}
             <GeoJSON
                 data={{
@@ -532,6 +544,34 @@
                     <div class="text-lg font-bold">You</div>
                 </Popup>
             </Marker>
+        {/if}
+        {#if geojsonData}
+            <GeoJSON
+                data={geojsonData}
+                promoteId="trading_name"
+            >
+                <CircleLayer
+                    paint={{
+                        'circle-color': '#ff7800',
+                        'circle-radius': 3,
+                        'circle-stroke-width': 1,
+                        'circle-stroke-color': '#000',
+                    }}
+                />
+                <Popup
+                    openOn="click"
+                    let:data
+                >
+                    {@const props = data?.properties}
+                    {#if props}
+                        <div>
+                            <p><strong>{props.trading_name}</strong></p>
+                            <p>Seating: {props.seating_type}</p>
+                            <p>Seats: {props.number_of_seats}</p>
+                        </div>
+                    {/if}
+                </Popup>
+            </GeoJSON>
         {/if}
     </MapLibre>
 
