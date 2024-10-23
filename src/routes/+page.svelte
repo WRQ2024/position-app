@@ -571,6 +571,7 @@
                 promoteId="trading_name"
             >
                 <CircleLayer
+                    minzoom={16}
                     paint={{
                         'circle-color': '#ff7800',
                         'circle-radius': 3,
