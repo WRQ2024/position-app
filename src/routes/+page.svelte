@@ -535,7 +535,6 @@
                 <LineLayer
                     layout={{ 'line-cap': 'round', 'line-join': 'round' }}
                     paint={{ 'line-color': 'purple', 'line-width': 3 }}
-                    beforeLayerType="symbol"
                 />
             </GeoJSON>
         {/if}
