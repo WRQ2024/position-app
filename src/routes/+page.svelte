@@ -61,11 +61,11 @@
     ]
 
     let treasures = [] // Storing Treasure Points
-    let path = [] // storing the user's movement path
     // Extent of the map
     let bounds = getMapBounds(markers)
     let poiData = null
     let EatData = null
+    let path = [] // storing the user's movement path
     /**
      * Declaring a function
      *
