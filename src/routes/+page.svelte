@@ -65,6 +65,7 @@
     // Extent of the map
     let bounds = getMapBounds(markers)
     let poiData = null
+    let EatData = null
     /**
      * Declaring a function
      *
@@ -552,9 +553,10 @@
                 </Popup>
             </GeoJSON>
         {/if}
-        {#if geojsonData}
+        {#if EatData}
+            <!-- Adding Eat rendering without affecting Melbourne -->
             <GeoJSON
-                data={geojsonData}
+                data={EatData}
                 promoteId="trading_name"
             >
                 <CircleLayer
