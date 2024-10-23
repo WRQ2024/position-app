@@ -442,23 +442,6 @@
         zoom={14}
     >
 
-        {#if path.length > 1}
-            <GeoJSON
-                data={{
-                    type: 'Feature',
-                    geometry: {
-                        type: 'LineString',
-                        coordinates: path,
-                    },
-                }}
-            >
-                <LineLayer
-                    layout={{ 'line-cap': 'round', 'line-join': 'round' }}
-                    paint={{ 'line-color': 'blue', 'line-width': 3 }}
-                    beforeLayerType="symbol"
-                />
-            </GeoJSON>
-        {/if}
         <!-- Custom control buttons -->
         <Control class="flex flex-col gap-y-2">
             <ControlGroup>
@@ -506,6 +489,23 @@
                 <LineLayer
                     layout={{ 'line-cap': 'round', 'line-join': 'round' }}
                     paint={{ 'line-color': 'purple', 'line-width': 3 }}
+                    beforeLayerType="symbol"
+                />
+            </GeoJSON>
+        {/if}
+        {#if path.length > 1}
+            <GeoJSON
+                data={{
+                    type: 'Feature',
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: path,
+                    },
+                }}
+            >
+                <LineLayer
+                    layout={{ 'line-cap': 'round', 'line-join': 'round' }}
+                    paint={{ 'line-color': 'blue', 'line-width': 3 }}
                     beforeLayerType="symbol"
                 />
             </GeoJSON>
