@@ -131,7 +131,7 @@
     /**
      * Trigger an action when getting close to a marker
      */
-    let count = 0 // number of markers found
+    // let count = 0 // number of markers found！！！！！！！！！！！！！！！！！！
     $: if (watchedPosition.coords) { // this block is triggered when watchedPosition is updated
         // The tracked position in marker format
         watchedMarker = {
@@ -355,9 +355,9 @@
         </div>
 
         <div class="col-span-4 md:col-span-1 text-center">
-            <h1 class="font-bold">Found {count} markers</h1>
+            <h1 class="font-bold">Found {countFound} treasures</h1>
 
-            The count will go up by one each time you are within 10 meters of a marker.
+            The count will go up by one each time you find a treasures.
         </div>
     </div>
 
