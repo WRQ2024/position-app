@@ -212,6 +212,7 @@
 
     let showGeoJSON = false
     let geojsonData
+    let accuracy
 
     /**
      * onMount is executed immediately after the component is mounted, it can be
@@ -234,6 +235,17 @@
         poiData = await poiResponse.json()
         console.log('onMount is running!') // Check if onMount is executed
         console.log('POI Data:', poiData) // Debugging point
+    })
+
+    onMount(async () => {
+        try {
+            const response = await fetch('/cafes_and_restaurants_with_seating_capacity.geojson')
+            geojsonData = await response.json()
+            console.log('Loaded GeoJSON data:', geojsonData)
+        }
+        catch (error) {
+            console.error('Error loading GeoJSON data:', error)
+        }
     })
 </script>
 
@@ -278,6 +290,12 @@
                 on:position={(e) => {
                     const userPosition = e.detail // Get current user location
                     coords = [userPosition.coords.longitude, userPosition.coords.latitude]
+                    // Add the accuracy display here: shirine started
+                    const accuracy = userPosition.coords.accuracy
+                    const locationAccuracy = `Accuracy: ${accuracy} meters`
+                    console.log(locationAccuracy) // Logs the accuracy in the console
+                    // shirine ended
+
                     if (!startTime) {
                         startTime = Date.now() // Store the start time in milliseconds
                     }
@@ -337,8 +355,21 @@
                     const newCoords = [watchedPosition.coords.longitude, watchedPosition.coords.latitude]
                     calculateDistance(newCoords) // Calculate and add to total distance
                     checkForTreasure() // Check if a treasure is found
+
+                    // Add the accuracy display here shirine
+                    let accuracy
+                    if (watchedPosition && watchedPosition.coords) {
+                        accuracy = watchedPosition.coords.accuracy
+                    }
+                    else {
+                        accuracy = 'Not available' // Handle the case when coords are not yet available
+                    }
+                    const locationAccuracy = `Accuracy: ${accuracy} meters`
+                    console.log(locationAccuracy) // Logs the accuracy in the console
                 }}
+
             />
+            <p class="break-words text-left">Location Accuracy: {accuracy} meters</p>
 
             <p class="break-words text-left">watchedPosition: {JSON.stringify(watchedPosition)}</p>
         </div>
@@ -374,6 +405,7 @@
         bind:bounds
         zoom={14}
     >
+
         {#if path.length > 1}
             <GeoJSON
                 data={{
@@ -532,6 +564,34 @@
                     <div class="text-lg font-bold">You</div>
                 </Popup>
             </Marker>
+        {/if}
+        {#if geojsonData}
+            <GeoJSON
+                data={geojsonData}
+                promoteId="trading_name"
+            >
+                <CircleLayer
+                    paint={{
+                        'circle-color': '#ff7800',
+                        'circle-radius': 3,
+                        'circle-stroke-width': 1,
+                        'circle-stroke-color': '#000',
+                    }}
+                />
+                <Popup
+                    openOn="click"
+                    let:data
+                >
+                    {@const props = data?.properties}
+                    {#if props}
+                        <div>
+                            <p><strong>{props.trading_name}</strong></p>
+                            <p>Seating: {props.seating_type}</p>
+                            <p>Seats: {props.number_of_seats}</p>
+                        </div>
+                    {/if}
+                </Popup>
+            </GeoJSON>
         {/if}
     </MapLibre>
 
