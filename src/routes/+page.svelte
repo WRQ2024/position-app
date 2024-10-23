@@ -517,6 +517,35 @@
                 </Popup>
             </GeoJSON>
         {/if}
+        {#if geojsonData}
+            <GeoJSON
+                data={geojsonData}
+                promoteId="trading_name"
+            >
+                <CircleLayer
+                    minzoom={14}
+                    paint={{
+                        'circle-color': '#ff7800',
+                        'circle-radius': 3,
+                        'circle-stroke-width': 1,
+                        'circle-stroke-color': '#000',
+                    }}
+                />
+                <Popup
+                    openOn="click"
+                    let:data
+                >
+                    {@const props = data?.properties}
+                    {#if props}
+                        <div>
+                            <p><strong>{props.trading_name}</strong></p>
+                            <p>Seating: {props.seating_type}</p>
+                            <p>Seats: {props.number_of_seats}</p>
+                        </div>
+                    {/if}
+                </Popup>
+            </GeoJSON>
+        {/if}
         <!-- Displaying markers, this is reactive -->
         <!-- For-each loop syntax -->
         <!-- markers is an object, lngLat, label, name are the fields in the object -->
@@ -565,35 +594,6 @@
                     <div class="text-lg font-bold">You</div>
                 </Popup>
             </Marker>
-        {/if}
-        {#if geojsonData}
-            <GeoJSON
-                data={geojsonData}
-                promoteId="trading_name"
-            >
-                <CircleLayer
-                    minzoom={14}
-                    paint={{
-                        'circle-color': '#ff7800',
-                        'circle-radius': 3,
-                        'circle-stroke-width': 1,
-                        'circle-stroke-color': '#000',
-                    }}
-                />
-                <Popup
-                    openOn="click"
-                    let:data
-                >
-                    {@const props = data?.properties}
-                    {#if props}
-                        <div>
-                            <p><strong>{props.trading_name}</strong></p>
-                            <p>Seating: {props.seating_type}</p>
-                            <p>Seats: {props.number_of_seats}</p>
-                        </div>
-                    {/if}
-                </Popup>
-            </GeoJSON>
         {/if}
     </MapLibre>
 
