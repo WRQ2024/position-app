@@ -233,19 +233,11 @@
         geojsonData = await response.json()
         const poiResponse = await fetch('landmarks-and-places-of-interest-including-schools-theatres-health-services-spor.geojson')
         poiData = await poiResponse.json()
+        const Eatresponse = await fetch('cafes_and_restaurants_with_seating_capacity.geojson')
+        geojsonData = await Eatresponse.json()
         console.log('onMount is running!') // Check if onMount is executed
         console.log('POI Data:', poiData) // Debugging point
-    })
-
-    onMount(async () => {
-        try {
-            const response = await fetch('/cafes_and_restaurants_with_seating_capacity.geojson')
-            geojsonData = await response.json()
-            console.log('Loaded GeoJSON data:', geojsonData)
-        }
-        catch (error) {
-            console.error('Error loading GeoJSON data:', error)
-        }
+        console.log('Loaded GeoJSON data:', geojsonData)
     })
 </script>
 
