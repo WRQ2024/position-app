@@ -71,6 +71,29 @@
      * Functions declared in <script> can only be used in this component
      */
 
+    // shirine started
+    // Define the saveGeoJSONToLocalStorage function
+    function saveGeoJSONToLocalStorage() {
+        const geojson = {
+            type: 'FeatureCollection',
+            features: [
+                {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: path, // Use the path array
+                    },
+                    properties: {
+                        name: 'User\'s Walked Path',
+                    },
+                },
+            ],
+        }
+
+        localStorage.setItem('userPathGeoJSON', JSON.stringify(geojson))
+    }
+    // shirine ended
+
     function addMarker(e, label, name) {
         markers = [
             ...markers,
@@ -180,7 +203,27 @@
             totalDistance += distance * 1000 // Convert to meters
         }
         path = [...path, newCoords] // Update the path with the new coordinates
+        // Save the GeoJSON to localStorage whenever the path updates, shirine
+        saveGeoJSONToLocalStorage()
     }
+
+    // shirine started------------
+
+    // Add the function to load the path from localStorage on page load
+    function loadGeoJSONFromLocalStorage() {
+        const savedGeoJSON = localStorage.getItem('userPathGeoJSON')
+        if (savedGeoJSON) {
+            const geojson = JSON.parse(savedGeoJSON)
+            path = geojson.features[0]?.geometry?.coordinates || []
+        }
+    }
+
+    // Load the saved path when the component mounts
+    onMount(() => {
+        loadGeoJSONFromLocalStorage()
+    })
+    // shirine ended------------------
+
     function checkForTreasure() {
         if (!position.coords) { return }
         treasures = treasures.map((treasure) => {
