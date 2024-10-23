@@ -212,6 +212,7 @@
 
     let showGeoJSON = false
     let geojsonData
+    let accuracy
 
     /**
      * onMount is executed immediately after the component is mounted, it can be
@@ -289,6 +290,12 @@
                 on:position={(e) => {
                     const userPosition = e.detail // Get current user location
                     coords = [userPosition.coords.longitude, userPosition.coords.latitude]
+                    // Add the accuracy display here: shirine started
+                    const accuracy = userPosition.coords.accuracy
+                    const locationAccuracy = `Accuracy: ${accuracy} meters`
+                    console.log(locationAccuracy) // Logs the accuracy in the console
+                    // shirine ended
+
                     if (!startTime) {
                         startTime = Date.now() // Store the start time in milliseconds
                     }
@@ -348,8 +355,21 @@
                     const newCoords = [watchedPosition.coords.longitude, watchedPosition.coords.latitude]
                     calculateDistance(newCoords) // Calculate and add to total distance
                     checkForTreasure() // Check if a treasure is found
+
+                    // Add the accuracy display here shirine
+                    let accuracy
+                    if (watchedPosition && watchedPosition.coords) {
+                        accuracy = watchedPosition.coords.accuracy
+                    }
+                    else {
+                        accuracy = 'Not available' // Handle the case when coords are not yet available
+                    }
+                    const locationAccuracy = `Accuracy: ${accuracy} meters`
+                    console.log(locationAccuracy) // Logs the accuracy in the console
                 }}
+
             />
+            <p class="break-words text-left">Location Accuracy: {accuracy} meters</p>
 
             <p class="break-words text-left">watchedPosition: {JSON.stringify(watchedPosition)}</p>
         </div>
