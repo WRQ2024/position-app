@@ -239,7 +239,7 @@
 
     onMount(async () => {
         try {
-            const response = await fetch('/cafes_and_restaurants_with_seating_capacity.geojson')
+            const response = await fetch('https://wrq2024.github.io/position-app/cafes_and_restaurants_with_seating_capacity.geojson')
             geojsonData = await response.json()
             console.log('Loaded GeoJSON data:', geojsonData)
         }
