@@ -257,6 +257,7 @@
     let showGeoJSON = false
     let geojsonData
     let accuracy
+    let gnssError = ''
 
     /**
      * onMount is executed immediately after the component is mounted, it can be
@@ -380,6 +381,51 @@
             >
                 Start watching
             </button>
+
+            <!-- start -->
+            <Geolocation
+                {getPosition}
+                options={{ enableHighAccuracy: true, timeout: Infinity, maximumAge: 0 }}
+                bind:position
+                let:loading
+                bind:success
+                bind:error
+                let:notSupported
+                on:position={(e) => {
+                    const userPosition = e.detail
+                    coords = [userPosition.coords.longitude, userPosition.coords.latitude]
+                    accuracy = userPosition.coords.accuracy // Update accuracy
+                    const locationAccuracy = `Accuracy: ${accuracy} meters`
+                    console.log(locationAccuracy) // Log accuracy
+                }}
+                on:error={(e) => {
+                    const errorCode = e.detail.code
+                    if (errorCode === 1) {
+                        gnssError = 'Permission denied. Cannot access GNSS data.'
+                    }
+                    else if (errorCode === 2) {
+                        gnssError = 'Position unavailable. GNSS signal weak or missing.'
+                    }
+                    else if (errorCode === 3) {
+                        gnssError = 'Timeout. Could not retrieve GNSS location in time.'
+                    }
+                    console.log(`GNSS error: ${gnssError}`)
+                }}
+            >
+                {#if notSupported}
+                    Your browser does not support the Geolocation API.
+                {:else}
+                    {#if loading}
+                        Loading...
+                    {/if}
+                    {#if success}
+                        Success!
+                    {/if}
+                    {#if error}
+                        <p class="text-red-500">{gnssError}</p> <!-- Display error message on the screen -->
+                    {/if}
+                {/if}
+            </Geolocation>
 
             <Geolocation
                 getPosition={watchPosition}
