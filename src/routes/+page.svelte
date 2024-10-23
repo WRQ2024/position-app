@@ -238,7 +238,6 @@
         console.log('onMount is running!') // Check if onMount is executed
         console.log('POI Data:', poiData) // Debugging point
         console.log('Eat Data:', EatData) // Debugging point
-        console.log('Loaded GeoJSON data:', geojsonData)
     })
 </script>
 
