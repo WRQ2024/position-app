@@ -208,8 +208,6 @@
         saveGeoJSONToLocalStorage()
     }
 
-    // shirine started------------
-
     // Add the function to load the path from localStorage on page load
     function loadGeoJSONFromLocalStorage() {
         const savedGeoJSON = localStorage.getItem('userPathGeoJSON')
@@ -223,7 +221,6 @@
     onMount(() => {
         loadGeoJSONFromLocalStorage()
     })
-    // shirine ended------------------
 
     function checkForTreasure() {
         if (!position.coords) { return }
@@ -327,11 +324,11 @@
                 on:position={(e) => {
                     const userPosition = e.detail // Get current user location
                     coords = [userPosition.coords.longitude, userPosition.coords.latitude]
-                    // Add the accuracy display here: shirine started
+                    // Add the accuracy display here:
                     const accuracy = userPosition.coords.accuracy
                     const locationAccuracy = `Accuracy: ${accuracy} meters`
                     console.log(locationAccuracy) // Logs the accuracy in the console
-                    // shirine ended
+                    // ended
 
                     if (!startTime) {
                         startTime = Date.now() // Store the start time in milliseconds
@@ -394,9 +391,15 @@
                 on:position={(e) => {
                     const userPosition = e.detail
                     coords = [userPosition.coords.longitude, userPosition.coords.latitude]
-                    accuracy = userPosition.coords.accuracy // Update accuracy
-                    const locationAccuracy = `Accuracy: ${accuracy} meters`
-                    console.log(locationAccuracy) // Log accuracy
+                    accuracy = userPosition.coords.accuracy
+
+                    // Check if GNSS is available or not
+                    if (accuracy > 50 || !userPosition.coords.altitude) {
+                        gnssError = 'GNSS is not available. Functioning with alternative location services (Wi-Fi or cell-tower).'
+                    }
+                    else {
+                        gnssError = '' // GNSS is active, clear the error
+                    }
                 }}
                 on:error={(e) => {
                     const errorCode = e.detail.code
@@ -404,25 +407,25 @@
                         gnssError = 'Permission denied. Cannot access GNSS data.'
                     }
                     else if (errorCode === 2) {
-                        gnssError = 'Position unavailable. GNSS signal weak or missing.'
+                        gnssError = 'Position unavailable. Please ensure GNSS is enabled, or move to an area with better signal.'
                     }
                     else if (errorCode === 3) {
                         gnssError = 'Timeout. Could not retrieve GNSS location in time.'
                     }
-                    console.log(`GNSS error: ${gnssError}`)
                 }}
             >
                 {#if notSupported}
-                    Your browser does not support the Geolocation API.
+                    <p>Your browser does not support the Geolocation API.</p>
                 {:else}
                     {#if loading}
-                        Loading...
+                        <p>Loading location data...</p>
                     {/if}
                     {#if success}
-                        Success!
+                        <p>Location successfully retrieved.</p>
                     {/if}
                     {#if error}
-                        <p class="text-red-500">{gnssError}</p> <!-- Display error message on the screen -->
+                        <p class="text-red-500">{gnssError}</p>
+                        <p>If indoors or in a GNSS-denied environment, the location might be less accurate.</p>
                     {/if}
                 {/if}
             </Geolocation>
